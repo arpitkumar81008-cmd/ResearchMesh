@@ -39,7 +39,7 @@ st.set_page_config(
     page_title="ResearchMesh — Evidence-Backed Research Agent",
     page_icon="⬡",
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="expanded",
 )
 
 # ── Modern Light Design System CSS ────────────────────────────────────────────
@@ -539,63 +539,74 @@ div[data-testid="stModal"] button[aria-label="Close"]:hover {
     color: #0F172A !important;
 }
 
-/* ── Streamlit Chrome Controls: Hide Menu & Deploy, Keep Sidebar Control ── */
+/* ── Streamlit Chrome Controls: Keep Sidebar Controls Fully Visible ── */
 #MainMenu { visibility: hidden !important; }
 footer { visibility: hidden !important; }
-[data-testid="stToolbar"] { visibility: hidden !important; }
 [data-testid="stDecoration"] { display: none !important; }
+[data-testid="stStatusWidget"] { visibility: hidden !important; }
 
-header {
+header, [data-testid="stHeader"] {
     background: transparent !important;
     visibility: visible !important;
     height: 3.2rem !important;
     z-index: 99 !important;
 }
 
-[data-testid="stHeader"] {
+[data-testid="stToolbar"] {
     background: transparent !important;
-    visibility: visible !important;
-    height: 3.2rem !important;
-    z-index: 99 !important;
-}
-
-/* ── Prominent Sidebar Reopen Button (Collapsed Control) ── */
-[data-testid="collapsedControl"] {
     visibility: visible !important;
     display: flex !important;
+    align-items: center !important;
+}
+
+/* ── Sidebar Expand Button (Streamlit 1.40+ & Legacy) ── */
+[data-testid="stExpandSidebarButton"],
+button[data-testid="stExpandSidebarButton"],
+button[aria-label="Expand sidebar"],
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     background: #FFFFFF !important;
     border: 1.5px solid #CBD5E1 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1) !important;
-    width: 40px !important;
-    height: 40px !important;
-    position: fixed !important;
-    top: 12px !important;
-    left: 14px !important;
-    color: #0F172A !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1) !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    margin-left: 12px !important;
+    margin-top: 6px !important;
     cursor: pointer !important;
     z-index: 999999 !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
+[data-testid="stExpandSidebarButton"]:hover,
+button[aria-label="Expand sidebar"]:hover,
 [data-testid="collapsedControl"]:hover {
     background: #F8FAFC !important;
     border-color: #2563EB !important;
-    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.18) !important;
-    transform: scale(1.06) !important;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.18) !important;
+    transform: scale(1.05) !important;
 }
 
+[data-testid="stExpandSidebarButton"] svg,
+button[aria-label="Expand sidebar"] svg,
 [data-testid="collapsedControl"] svg {
     fill: #0F172A !important;
     stroke: #0F172A !important;
-    width: 22px !important;
-    height: 22px !important;
+    width: 20px !important;
+    height: 20px !important;
 }
 
-/* ── Sidebar Collapse Button (Inside Sidebar) ── */
-[data-testid="stSidebarCollapseButton"] {
+/* ── Sidebar Collapse Button (Inside Sidebar Header) ── */
+[data-testid="stSidebarCollapseButton"],
+button[data-testid="stSidebarCollapseButton"],
+button[aria-label="Collapse sidebar"] {
+    visibility: visible !important;
+    display: inline-flex !important;
     background: #FFFFFF !important;
     border: 1px solid #CBD5E1 !important;
     border-radius: 8px !important;
@@ -605,15 +616,49 @@ header {
     transition: all 0.2s ease !important;
 }
 
-[data-testid="stSidebarCollapseButton"]:hover {
+[data-testid="stSidebarCollapseButton"]:hover,
+button[aria-label="Collapse sidebar"]:hover {
     background: #F1F5F9 !important;
     border-color: #94A3B8 !important;
     color: #2563EB !important;
 }
 
-[data-testid="stSidebarCollapseButton"] svg {
+[data-testid="stSidebarCollapseButton"] svg,
+button[aria-label="Collapse sidebar"] svg {
     fill: #0F172A !important;
     stroke: #0F172A !important;
+}
+
+/* ── Prevent Button Text Truncation (No "Ad...", "Set...", "New R...") ── */
+.stButton > button {
+    white-space: nowrap !important;
+    padding: 6px 14px !important;
+    min-height: 38px !important;
+}
+.stButton > button p,
+.stButton > button span,
+.stButton > button div {
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    font-size: 13px !important;
+    font-weight: 550 !important;
+}
+
+/* ── Suggested Inquiries Pills: Allow Clean Wrapping ── */
+div[data-testid="stButton"]:has(button[key^="prompt_"]) button {
+    height: auto !important;
+    min-height: 46px !important;
+    padding: 8px 12px !important;
+    border-radius: 12px !important;
+}
+div[data-testid="stButton"]:has(button[key^="prompt_"]) button p {
+    white-space: normal !important;
+    word-break: normal !important;
+    text-align: center !important;
+    line-height: 1.35 !important;
+    font-size: 12.5px !important;
+    overflow: visible !important;
 }
 
 /* ── Omnibar Search Trigger on Home Page ── */
@@ -1026,18 +1071,18 @@ def search_dialog(prefill: str = ""):
 
 # ── Sticky Top Navigation Bar ─────────────────────────────────────────────────
 has_keys = bool(get_active_keys()[0] and get_active_keys()[1])
-nav_c1, nav_c2, nav_c3, nav_c4, nav_c5 = st.columns([3.0, 1.1, 1.3, 1.2, 1.4])
+nav_c1, nav_c2, nav_c3, nav_c4, nav_c5 = st.columns([2.0, 0.9, 1.2, 1.1, 1.2])
 with nav_c1:
     html_block(
         """
-        <div style="display:flex; align-items:center; gap:10px; padding: 4px 0;">
-            <div style="width:28px; height:28px; border-radius:8px; background:#0F172A; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#FFFFFF;">
+        <div style="display:flex; align-items:center; gap:8px; padding: 4px 0; white-space:nowrap;">
+            <div style="width:26px; height:26px; border-radius:7px; background:#0F172A; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#FFFFFF;">
                 RM
             </div>
-            <span style="font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:16px; letter-spacing:-0.02em; color:#0F172A;">
+            <span style="font-family:'Plus Jakarta Sans', sans-serif; font-weight:700; font-size:15px; letter-spacing:-0.02em; color:#0F172A;">
                 ResearchMesh
             </span>
-            <span style="font-family:'JetBrains Mono', monospace; font-size:11px; font-weight:500; padding:2px 8px; border-radius:6px; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569;">
+            <span style="font-family:'JetBrains Mono', monospace; font-size:10.5px; font-weight:500; padding:2px 7px; border-radius:5px; background:#F1F5F9; border:1px solid #E2E8F0; color:#475569;">
                 Workbench
             </span>
         </div>
@@ -1046,21 +1091,21 @@ with nav_c1:
 with nav_c2:
     html_block(
         f"""
-        <div style="display:flex; align-items:center; justify-content:flex-end; height:100%; gap:6px; font-family:'JetBrains Mono', monospace; font-size:11.5px; color:{'#15803D' if has_keys else '#D97706'}; padding-top:6px;">
-            <span style="display:inline-block; width:7px; height:7px; border-radius:9999px; background:{'#16A34A' if has_keys else '#F59E0B'};"></span>
-            {'Ready' if has_keys else 'Keys Needed'}
+        <div style="display:flex; align-items:center; justify-content:flex-end; height:100%; gap:5px; font-family:'JetBrains Mono', monospace; font-size:11px; color:{'#15803D' if has_keys else '#D97706'}; white-space:nowrap; padding-top:6px;">
+            <span style="display:inline-block; width:6px; height:6px; border-radius:9999px; background:{'#16A34A' if has_keys else '#F59E0B'};"></span>
+            {'Ready' if has_keys else 'Add Keys'}
         </div>
         """
     )
 with nav_c3:
-    key_btn_label = "🔑 Keys Active" if has_keys else "🔑 Add API Keys"
+    key_btn_label = "🔑 Keys Active" if has_keys else "🔑 API Keys"
     if st.button(key_btn_label, key="nav_keys_btn", use_container_width=True):
         api_keys_dialog()
 with nav_c4:
     if st.button("⚙️ Settings", key="nav_settings_btn", use_container_width=True, help="Configure pipeline search index, corpus depth, and agent"):
         pipeline_settings_dialog()
 with nav_c5:
-    if st.button("+ New Research", key="nav_launch_btn", use_container_width=True):
+    if st.button("+ Research", key="nav_launch_btn", use_container_width=True):
         search_dialog()
 
 
@@ -1387,13 +1432,13 @@ html_block(
 
 p_col1, p_col2, p_col3 = st.columns(3)
 with p_col1:
-    if st.button("Health effects of keratin treatments", key="prompt_1", use_container_width=True):
+    if st.button("Keratin health & exposure risks", key="prompt_1", use_container_width=True):
         search_dialog(prefill="What are the documented health effects and formaldehyde exposure risks of keratin hair treatments?")
 with p_col2:
-    if st.button("Solid-state vs lithium battery readiness", key="prompt_2", use_container_width=True):
+    if st.button("Solid-state vs lithium batteries", key="prompt_2", use_container_width=True):
         search_dialog(prefill="What is the commercial readiness and energy density comparison between solid-state batteries and lithium-ion in 2025/2026?")
 with p_col3:
-    if st.button("Security sandboxes for browser agents", key="prompt_3", use_container_width=True):
+    if st.button("Browser agent security sandboxes", key="prompt_3", use_container_width=True):
         search_dialog(prefill="What are the current best practices and runtime sandbox standards for autonomous AI browser agents?")
 
 with st.expander("Pipeline Methodology & Execution Flow", expanded=False):
