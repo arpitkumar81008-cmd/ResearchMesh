@@ -39,7 +39,7 @@ st.set_page_config(
     page_title="ResearchMesh — Evidence-Backed Research Agent",
     page_icon="⬡",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="auto",
 )
 
 # ── Modern Light Design System CSS ────────────────────────────────────────────
@@ -207,48 +207,72 @@ p, li {
     margin: 0 !important;
 }
 
-/* ── Inputs & Textarea ── */
-.stTextArea textarea {
+/* ── Inputs, Textarea & BaseWeb Containers ── */
+.stTextInput [data-baseweb="base-input"],
+.stTextInput [data-baseweb="input"],
+.stTextInput > div > div,
+.stTextArea [data-baseweb="base-input"],
+.stTextArea [data-baseweb="textarea"] {
     background-color: #FFFFFF !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 12px !important;
-    padding: 14px 18px !important;
-    font-size: 15px !important;
-    color: #0F172A !important;
-    line-height: 1.6 !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+    border: 1.5px solid #94A3B8 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
     transition: all 0.2s ease !important;
 }
 
-.stTextArea textarea:focus {
+.stTextInput [data-baseweb="base-input"]:focus-within,
+.stTextArea [data-baseweb="base-input"]:focus-within {
     border-color: #2563EB !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
-    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
 }
 
-.stTextArea textarea::placeholder {
-    color: #94A3B8 !important;
-}
-
-.stTextInput input {
+.stTextInput input,
+.stTextArea textarea {
     background-color: #FFFFFF !important;
-    border: 1px solid #CBD5E1 !important;
-    border-radius: 8px !important;
-    font-size: 14px !important;
+    border: none !important;
+    font-size: 14.5px !important;
     color: #0F172A !important;
-    padding: 9px 14px !important;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    padding: 10px 14px !important;
+    line-height: 1.5 !important;
 }
 
-.stTextInput input:focus {
-    border-color: #2563EB !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12) !important;
+.stTextArea textarea {
+    border-radius: 10px !important;
+    padding: 14px 18px !important;
+}
+
+/* ── High-Contrast, Easily Legible Placeholders (Fix for Low Contrast) ── */
+input::placeholder,
+textarea::placeholder,
+.stTextInput input::placeholder,
+.stTextArea textarea::placeholder,
+[data-baseweb="input"] input::placeholder,
+[data-baseweb="base-input"] input::placeholder {
+    color: #475569 !important; /* Dark Slate-600: strong contrast against white & pastel */
+    opacity: 1 !important;
+    font-weight: 500 !important;
+}
+
+::-webkit-input-placeholder {
+    color: #475569 !important;
+    opacity: 1 !important;
+    font-weight: 500 !important;
+}
+::-moz-placeholder {
+    color: #475569 !important;
+    opacity: 1 !important;
+    font-weight: 500 !important;
+}
+:-ms-input-placeholder {
+    color: #475569 !important;
+    opacity: 1 !important;
+    font-weight: 500 !important;
 }
 
 /* ── Selectbox & Dropdowns ── */
 [data-testid="stSelectbox"] > div > div {
     background-color: #FFFFFF !important;
-    border: 1px solid #CBD5E1 !important;
+    border: 1.5px solid #94A3B8 !important;
     border-radius: 8px !important;
     color: #0F172A !important;
 }
@@ -515,9 +539,99 @@ div[data-testid="stModal"] button[aria-label="Close"]:hover {
     color: #0F172A !important;
 }
 
-/* ── Hide Streamlit Chrome ── */
-#MainMenu, footer, header {
-    visibility: hidden !important;
+/* ── Streamlit Chrome Controls: Hide Menu & Deploy, Keep Sidebar Control ── */
+#MainMenu { visibility: hidden !important; }
+footer { visibility: hidden !important; }
+[data-testid="stToolbar"] { visibility: hidden !important; }
+[data-testid="stDecoration"] { display: none !important; }
+
+header {
+    background: transparent !important;
+    visibility: visible !important;
+    height: 3.2rem !important;
+    z-index: 99 !important;
+}
+
+[data-testid="stHeader"] {
+    background: transparent !important;
+    visibility: visible !important;
+    height: 3.2rem !important;
+    z-index: 99 !important;
+}
+
+/* ── Prominent Sidebar Reopen Button (Collapsed Control) ── */
+[data-testid="collapsedControl"] {
+    visibility: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #FFFFFF !important;
+    border: 1.5px solid #CBD5E1 !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1) !important;
+    width: 40px !important;
+    height: 40px !important;
+    position: fixed !important;
+    top: 12px !important;
+    left: 14px !important;
+    color: #0F172A !important;
+    cursor: pointer !important;
+    z-index: 999999 !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+[data-testid="collapsedControl"]:hover {
+    background: #F8FAFC !important;
+    border-color: #2563EB !important;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.18) !important;
+    transform: scale(1.06) !important;
+}
+
+[data-testid="collapsedControl"] svg {
+    fill: #0F172A !important;
+    stroke: #0F172A !important;
+    width: 22px !important;
+    height: 22px !important;
+}
+
+/* ── Sidebar Collapse Button (Inside Sidebar) ── */
+[data-testid="stSidebarCollapseButton"] {
+    background: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    border-radius: 8px !important;
+    color: #0F172A !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    padding: 4px !important;
+    transition: all 0.2s ease !important;
+}
+
+[data-testid="stSidebarCollapseButton"]:hover {
+    background: #F1F5F9 !important;
+    border-color: #94A3B8 !important;
+    color: #2563EB !important;
+}
+
+[data-testid="stSidebarCollapseButton"] svg {
+    fill: #0F172A !important;
+    stroke: #0F172A !important;
+}
+
+/* ── Omnibar Search Trigger on Home Page ── */
+div[data-testid="stButton"]:has(button[key="main_cmd_trigger"]) button {
+    background: #FFFFFF !important;
+    border: 1.5px solid #94A3B8 !important;
+    border-radius: 9999px !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.07) !important;
+    height: 48px !important;
+}
+div[data-testid="stButton"]:has(button[key="main_cmd_trigger"]) button p {
+    color: #1E293B !important;
+    font-size: 14.5px !important;
+    font-weight: 550 !important;
+}
+div[data-testid="stButton"]:has(button[key="main_cmd_trigger"]) button:hover {
+    border-color: #2563EB !important;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.12) !important;
 }
 </style>
 """,
@@ -625,6 +739,74 @@ def api_keys_dialog():
         st.session_state["sb_tinyfish_key"] = ""
         st.session_state["sb_gemini_key"] = ""
         st.toast("Credentials cleared.", icon="ℹ️")
+        time.sleep(0.4)
+        st.rerun()
+
+
+# ── Pipeline Settings & Configuration Modal (@st.dialog) ──────────────────────
+@st.dialog("Pipeline Settings & Parameters", width="medium")
+def pipeline_settings_dialog():
+    st.markdown(
+        """
+        <p style="font-size:13.5px; color:#475569; line-height:1.55; margin-bottom:12px;">
+            Configure your research depth, target search index, and autonomous agent behavior.
+            You can also open or collapse the full sidebar anytime using the <strong>☰</strong> button at the top-left of the screen.
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
+    with st.form("pipeline_settings_modal_form", clear_on_submit=False):
+        st.markdown(
+            "<p style='font-family:\"JetBrains Mono\", monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#64748B; margin-bottom:6px;'>Target Search Index</p>",
+            unsafe_allow_html=True,
+        )
+        cur_dom = st.session_state.get("sb_domain_type", "web")
+        dom_idx = ["web", "news", "research_paper"].index(cur_dom) if cur_dom in ["web", "news", "research_paper"] else 0
+        new_dom = st.selectbox(
+            "Search Index",
+            options=["web", "news", "research_paper"],
+            index=dom_idx,
+            format_func=lambda x: {
+                "web": "Global Web (General)",
+                "news": "News & Verified Media",
+                "research_paper": "Academic & Preprints",
+            }[x],
+            label_visibility="collapsed",
+        )
+
+        st.markdown(
+            "<p style='font-family:\"JetBrains Mono\", monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#64748B; margin-top:14px; margin-bottom:6px;'>Corpus Depth</p>",
+            unsafe_allow_html=True,
+        )
+        cur_src = st.session_state.get("sb_max_sources", 5)
+        new_src = st.slider(
+            "Max Sources to Synthesize",
+            min_value=3,
+            max_value=8,
+            value=int(cur_src),
+            step=1,
+            help="Higher source depth broadens cross-examination but takes slightly longer to scrape.",
+        )
+
+        st.markdown(
+            "<p style='font-family:\"JetBrains Mono\", monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#64748B; margin-top:14px; margin-bottom:6px;'>Agent Escalation</p>",
+            unsafe_allow_html=True,
+        )
+        cur_agent = bool(st.session_state.get("sb_use_web_agent", False))
+        new_agent = st.checkbox(
+            "Enable Autonomous Web Agent Escalation",
+            value=cur_agent,
+            help="Uses TinyFish Web Agent to autonomously bypass Cloudflare gates, cookie prompts, and JS hydration walls.",
+        )
+
+        st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+        saved = st.form_submit_button("Save Settings", use_container_width=True)
+
+    if saved:
+        st.session_state["sb_domain_type"] = new_dom
+        st.session_state["sb_max_sources"] = new_src
+        st.session_state["sb_use_web_agent"] = new_agent
+        st.toast("Settings saved successfully!", icon="✅")
         time.sleep(0.4)
         st.rerun()
 
@@ -844,7 +1026,7 @@ def search_dialog(prefill: str = ""):
 
 # ── Sticky Top Navigation Bar ─────────────────────────────────────────────────
 has_keys = bool(get_active_keys()[0] and get_active_keys()[1])
-nav_c1, nav_c2, nav_c3, nav_c4 = st.columns([3.2, 1.2, 1.3, 1.4])
+nav_c1, nav_c2, nav_c3, nav_c4, nav_c5 = st.columns([3.0, 1.1, 1.3, 1.2, 1.4])
 with nav_c1:
     html_block(
         """
@@ -875,6 +1057,9 @@ with nav_c3:
     if st.button(key_btn_label, key="nav_keys_btn", use_container_width=True):
         api_keys_dialog()
 with nav_c4:
+    if st.button("⚙️ Settings", key="nav_settings_btn", use_container_width=True, help="Configure pipeline search index, corpus depth, and agent"):
+        pipeline_settings_dialog()
+with nav_c5:
     if st.button("+ New Research", key="nav_launch_btn", use_container_width=True):
         search_dialog()
 
@@ -893,6 +1078,9 @@ with st.sidebar:
             <p style="font-size: 13px; color: #64748B; margin: 3px 0 0 0;">
                 Discovery &amp; Reasoning Parameters
             </p>
+            <p style="font-size: 11px; color: #94A3B8; margin: 6px 0 0 0; line-height:1.4;">
+                Tip: Click <strong>&lt;</strong> to collapse. Click <strong>&gt;</strong> or <strong>⚙️ Settings</strong> to bring it back anytime.
+            </p>
         </div>
         """,
         unsafe_allow_html=True,
@@ -907,7 +1095,7 @@ with st.sidebar:
         "TinyFish API Key",
         value=st.session_state.get("sb_tinyfish_key") or os.getenv("TINYFISH_API_KEY", ""),
         type="password",
-        placeholder="tf_live_...",
+        placeholder="tf_live_... or sk-tinyfish-...",
         key="sb_tinyfish_key",
         help="Get your key at agent.tinyfish.ai/api-keys",
     )
@@ -915,7 +1103,7 @@ with st.sidebar:
         "Gemini API Key",
         value=st.session_state.get("sb_gemini_key") or os.getenv("GEMINI_API_KEY", ""),
         type="password",
-        placeholder="AIza...",
+        placeholder="AIzaSy...",
         key="sb_gemini_key",
         help="Get your key at aistudio.google.com/app/apikey",
     )
@@ -926,15 +1114,18 @@ with st.sidebar:
         "<p style='font-family:\"JetBrains Mono\", monospace; font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.06em; color:#64748B; margin-bottom:6px;'>Index Routing</p>",
         unsafe_allow_html=True,
     )
+    cur_dom = st.session_state.get("sb_domain_type", "web")
+    dom_idx = ["web", "news", "research_paper"].index(cur_dom) if cur_dom in ["web", "news", "research_paper"] else 0
     domain_type = st.selectbox(
         "Target Index",
         options=["web", "news", "research_paper"],
-        index=0,
+        index=dom_idx,
         format_func=lambda x: {
             "web": "Global Web (General)",
             "news": "News & Verified Media",
             "research_paper": "Academic & Preprints",
         }[x],
+        key="sb_domain_type",
         label_visibility="collapsed",
     )
     st.caption(f"Active index: `{domain_type}`")
@@ -943,8 +1134,9 @@ with st.sidebar:
         "Corpus Depth (Max Sources)",
         min_value=3,
         max_value=8,
-        value=5,
+        value=int(st.session_state.get("sb_max_sources", 5)),
         step=1,
+        key="sb_max_sources",
         help="Number of primary sources to retrieve and cross-examine.",
     )
     st.caption(f"Allocated sources: {max_sources}")
@@ -957,7 +1149,8 @@ with st.sidebar:
     )
     use_web_agent = st.checkbox(
         "Enable Web Agent Escalation",
-        value=False,
+        value=bool(st.session_state.get("sb_use_web_agent", False)),
+        key="sb_use_web_agent",
         help="Deploys TinyFish Web Agent to autonomously bypass paywalls, cookie prompts, and SPA hydration walls on blocked URLs.",
     )
     if use_web_agent:
